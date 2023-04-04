@@ -1,15 +1,17 @@
 {
   "name": "unused-packages-cleaner",
-  "version": "1.1.1",
+  "version": "1.1.6",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "bin": {
-    "unused-packages-cleaner": "./cli.js"
+    "unused-packages-cleaner": "./bin.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "fs": "^0.0.1-security",
-    "path": "^0.12.7"
-  }
+    "find-up": "^6.3.0",
+    "fs": "^0.0.1-security"
+  },
+  "devDependencies": {}
 }

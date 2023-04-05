@@ -6,7 +6,7 @@ import { pathToFileURL } from 'url';
 
 const exec = promisify(execCb);
 
-export default async function removeUnusedDependencies() {
+export default async function removeUnusedDependencies({ action }) {
     const packageJsonPath = await findUp('package.json', { cwd: process.cwd() });
     const packageJsonUrl = pathToFileURL(packageJsonPath).toString();
     const packageJsonModule = await import(packageJsonUrl, { assert: { type: 'json' } });
@@ -50,37 +50,47 @@ export default async function removeUnusedDependencies() {
 
     const filterDependencies = (deps) => {
         const newDeps = {};
+        const unusedDeps = {}
+
+        if(!deps) return {}
+
         Object.keys(deps).forEach((dep) => {
             if (usedPackages.has(dep)) {
                 newDeps[dep] = deps[dep];
+            } else {
+                unusedDeps[dep] = deps[dep]
             }
         });
-        return newDeps;
+        return {
+            newDeps,
+            unusedDeps
+        };
     };
 
     packageJson.dependencies = filterDependencies(packageJson.dependencies);
     packageJson.devDependencies = filterDependencies(packageJson.devDependencies);
 
-    fs.writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
-
-    const emptyDependencies = Object.keys(packageJson.dependencies).filter((dep) => !packageJson.dependencies[dep]);
-    if (emptyDependencies.length > 0) {
-        const command = `npm uninstall ${emptyDependencies.join(' ')}`;
-        console.log('\x1b[31m', `Removing empty dependencies...`);
-        const { stdout, stderr } = await exec(command);
-        console.log(stdout);
-        console.error(stderr);
+    if (action === 'remove') {
+        await removeDependencies(formatDependencyList(packageJson.dependencies.unusedDeps), 'Uninstalling unused dependencies...');
+        await removeDependencies(formatDependencyList(packageJson.devDependencies.unusedDeps), 'Uninstalling unused devDependencies...');
+    } else if (action === 'analyze') {
+        console.log('\x1b[32m', 'Unused dependencies:', packageJson.dependencies.unusedDeps);
+        console.log('\x1b[32m', 'Unused devDependencies:', packageJson.devDependencies.unusedDeps);
+    } else {
+        console.log('\x1b[32m', 'Nothing to remove!');
     }
-    
-    const empytDevDependencies = Object.keys(packageJson.devDependencies).filter((dep) => !packageJson.devDependencies[dep]);
-    if (empytDevDependencies.length > 0) {
-        const command = `npm uninstall ${empytDevDependencies.join(' ')}`;
-        console.log('\x1b[31m', `Removing empty dependencies...`);
-        const { stdout, stderr } = await exec(command);
-        console.log(stdout);
-        console.error(stderr);
-    }
-    
-    console.log('\x1b[32m', 'Done!');
 }
 
+async function removeDependencies(dependencies, message) {
+    if (dependencies) {
+        const command = `npm uninstall ${dependencies}`;
+        console.log('\x1b[31m', message);
+        const { stdout, stderr } = await exec(command);
+        console.log('\x1b[32m', 'Done!');
+    }
+}
+
+function formatDependencyList(dependencies) {
+    if(!dependencies) return;
+    return Object.keys(dependencies).join(', ');
+}

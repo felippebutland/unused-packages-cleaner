@@ -1,6 +1,6 @@
 {
   "name": "unused-packages-cleaner",
-  "version": "1.1.9",
+  "version": "1.2.0",
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "find-up": "^6.3.0",
-    "fs": "^0.0.1-security"
-  },
-  "devDependencies": {}
+    "fs": "^0.0.1-security",
+    "yargs": "^17.7.1"
+  }
 }

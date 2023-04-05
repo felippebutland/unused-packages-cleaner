@@ -2,15 +2,12 @@
 
 ## Getting started 
 
-```bash
-npm -g unused-packages-cleaner
-```
-
 Go to your project folder and run the command:
 
 ```bash
-unused-packages-cleaner
+npx unused-packages-cleaner
 ```
+
 
 ## Why to use?
 

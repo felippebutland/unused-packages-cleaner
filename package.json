@@ -4,6 +4,10 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/felippebutland/unused-packages-cleaner"
+  },
   "bin": {
     "unused-packages-cleaner": "./bin.js"
   },

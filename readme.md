@@ -2,10 +2,16 @@
 
 ## Getting started 
 
-Go to your project folder and run the command:
+Go to your project folder, if you wanna uninstall all unused packages in your repository, run the following command:
 
 ```bash
-npx unused-packages-cleaner
+npx unused-packages-cleaner remove
+```
+
+If you wanna analyze all unused packages in your repository, run the following command:
+
+```bash
+npx unused-packages-cleaner analyze
 ```
 
 

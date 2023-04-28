@@ -3,7 +3,6 @@ import { promisify } from 'util';
 import { exec as execCb } from 'child_process';
 import { findUp } from 'find-up';
 import { pathToFileURL } from 'url';
-import { ConsoleLogger } from '@nestjs/common';
 
 const exec = promisify(execCb);
 
